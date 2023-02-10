@@ -120,6 +120,11 @@ img {
     color: var(--cyan);
 }
 
+.card__title:visited {
+    color: var(--cyan);
+}
+
+
 .card__description {
     font-size: 1rem;
     font-weight: var(--font-light);
