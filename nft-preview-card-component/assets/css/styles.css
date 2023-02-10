@@ -108,6 +108,10 @@ img {
     opacity: 1;
 }
 
+.card__title {
+    margin-bottom: 1.625rem;
+}
+
 .card__title a{
     cursor: pointer;
     font-size: var(--title-font-size);
@@ -116,14 +120,13 @@ img {
     transition: color .3s;
 }
 
+.card__title a:visited {
+    color: var(--white);
+}
+
 .card__title a:hover {
     color: var(--cyan);
 }
-
-.card__title a:visited {
-    color: var(--cyan);
-}
-
 
 .card__description {
     font-size: 1rem;
