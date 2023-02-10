@@ -59,7 +59,7 @@ img {
     margin-inline: 1.5rem;
 }
 
-.section {
+.main {
     padding-block: 3.875rem;
 }
 
@@ -188,6 +188,10 @@ img {
     color: var(--cyan);
 }
 
+.card__footer-name a:visited {
+    color: var(--cyan);
+}
+
 /* BREAKPOINTS */
 @media screen and (min-width: 280px) {
     .card__container {
@@ -196,7 +200,7 @@ img {
 }
 
 @media screen and (min-width: 376px) {
-    .section {
+    .main {
         padding-top: 9.5rem;
     }
 
