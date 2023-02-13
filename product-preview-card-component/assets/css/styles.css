@@ -1,0 +1,187 @@
+/* GOOGLE FONTS */
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,700&family=Montserrat:wght@500;700&display=swap');
+
+/* CSS VARIABLES */
+:root {
+
+    /* Colors */
+    --primary-color: hsl(158, 36%, 37%);
+    --primary-color-alt: hsl(30, 38%, 92%);
+    --title-color: hsl(212, 21%, 14%);
+    --text-color: hsl(228, 12%, 48%);
+    --white: hsl(0, 0%, 100%);
+    --active-color: hsl(156, 42%, 18%);
+
+    /* Font and typography */
+    --body-font: 'Montserrat', sans-serif;
+    --title-font: 'Fraunces', serif;
+    --biggest-font-size: 1.875rem;
+    --normal-font-size: .875rem;
+
+    /* Font-weights */
+    --font-medium: 500;
+    --font-bold: 700;
+}
+
+/* Adjust typography for desktop */
+@media screen and (min-width: 1024px) {
+   :root {
+    --biggest-font-size: 2.125rem;
+   }
+}
+
+/* BASE STYLES */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    background-color: var(--primary-color-alt);
+    font-family: var(--body-font);
+    font-size: var(--normal-font-size);
+}
+
+img {
+    max-width: 100%;
+    height: auto;
+}
+
+h1, h3 {
+    font-family: var(--title-font);
+    font-weight: var(--font-bold);
+}
+
+/* REUSABLE CSS */
+.main {
+    padding-block: 1.75rem;
+}
+
+.container {
+    margin-inline: 1rem;
+}
+
+.grid {
+    display: grid;
+    gap: 1rem;
+}
+
+/* CARD */
+.card__container {
+    background-color: var(--white);
+    border-radius: .5rem;
+    overflow: hidden;
+}
+
+.card__data {
+    padding-inline: 1.5rem;
+}
+
+.card__image-desktop {
+    display: none;
+}
+
+.card__subtitle {
+    display: block;
+    text-transform: uppercase;
+    color: var(--text-color);
+    font-size: .75rem;
+    font-weight: var(--font-medium);
+    letter-spacing: .375em;
+    margin-bottom: 1.25rem;
+}
+
+.card__title {
+    color: var(--title-color);
+    font-size: var(--biggest-font-size);
+    margin-bottom: 1.5rem;
+    line-height: 1.875rem;
+}
+
+.card__description {
+    color: var(--text-color);
+    font-weight: var(--font-medium);
+    margin-bottom: 1rem;
+    line-height: 1.5rem;
+}
+
+.card__pricing {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1.25rem;
+}
+
+.card__price {
+    color: var(--primary-color);
+    font-size: var(--biggest-font-size);
+}
+
+.card__discount {
+    text-decoration: line-through;
+    color: var(--text-color);
+    font-weight: var(--font-medium);
+}
+
+.card__button {
+    display: inline-flex;
+    justify-content: center;
+    gap: .625rem;
+    cursor: pointer;
+    width: 100%;
+    background-color: var(--primary-color);
+    text-decoration: none;
+    color: var(--white);
+    padding-block: 1rem;
+    margin-bottom: 1.5rem;
+    font-weight: var(--font-bold);
+    border-radius: .5rem;
+    transition: background .3s;
+}
+
+.card__button img{
+    height: 100%;
+}
+
+.card__button:hover {
+    background-color: var(--active-color);
+}
+
+/* BREAKPOINTS */
+@media screen and (min-width: 420px) {
+    .container {
+        margin-inline: auto;
+    }
+
+    .card__container {
+        max-width: 343px;
+    }
+}
+
+@media screen and (min-width: 767px) {
+    .main {
+        padding-top: 10rem;
+        padding-bottom: 5rem;
+    }
+    .card__container {
+        max-width: 600px;
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .card__image-mobile {
+        display: none;
+    }
+
+    .card__image-desktop {
+        display: block;
+    }
+
+    .card__data {
+        padding-top: 2.25rem;
+    }
+
+    .card__title {
+        line-height: 2rem;
+    }
+}
