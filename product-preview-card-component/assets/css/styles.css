@@ -48,7 +48,7 @@ img {
     height: auto;
 }
 
-h1, h3 {
+h1, h2 {
     font-family: var(--title-font);
     font-weight: var(--font-bold);
 }
