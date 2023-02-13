@@ -43,7 +43,7 @@
 }
 
 body {
-    background: url('/assets/img/pattern-background-mobile.svg');
+    background: url('assets/img/pattern-background-mobile.svg');
     background-color: var(--primary-color);
     background-position: top;
     background-repeat: repeat-x;
@@ -275,7 +275,7 @@ a {
 /* Large screens */
 @media screen and (min-width: 1024px) {
     body {
-        background: url('/assets/img/pattern-background-desktop.svg');
+        background: url('assets/img/pattern-background-desktop.svg');
         background-color: var(--primary-color);
         background-position: top;
         background-repeat: repeat-x;
