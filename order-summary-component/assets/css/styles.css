@@ -1,0 +1,289 @@
+/* GOOGLE FONTS */
+@import url('https://fonts.googleapis.com/css2?family=Red+Hat+Display:wght@500;700;900&display=swap');
+
+/* VARIABLE CSS */
+:root {
+
+    /* COLORS */
+    --primary-color: hsl(225, 100%, 94%);
+    --primary-color-alt: hsl(245, 75%, 52%);
+    --pale-blue: hsl(225, 100%, 98%);
+    --des-blue: hsl(224, 23%, 55%);
+    --dark-blue: hsl(223, 47%, 23%);
+    --medium-blue: hsl(245, 83%, 68%);
+
+    /* Font and typography */
+    --body-font: 'Red Hat Display', sans-serif;
+    --biggest-font-size: 1.375rem;
+    --normal-font-size: 1rem;
+    --small-font-size: .9375rem;
+    --smaller-font-size: .875rem;
+
+
+    /* Font weights */
+    --font-medium: 500;
+    --font-bold: 700;
+    --font-black: 900;
+}
+
+@media screen and (min-width: 498px){
+    :root {
+        --biggest-font-size: 1.75rem;
+        --normal-font-size: 1rem;
+        --small-font-size: .9375rem;
+        --smaller-font-size: .875rem;
+    }
+}
+
+/* BASE STYLES */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    background: url('/assets/img/pattern-background-mobile.svg');
+    background-color: var(--primary-color);
+    background-position: top;
+    background-repeat: repeat-x;
+    background-size: contain;
+    font-family: var(--body-font);
+    font-size: var(--normal-font-size);
+}
+
+img {
+    max-width: 100%;
+    height: auto;
+}
+
+a {
+    font-family: var(--body-font);
+    text-decoration: none;
+    color: #fff;
+}
+
+/* REUSABLE CSS */
+.section {
+    padding-block: 4.5rem;
+}
+
+.container {
+    max-width: 450px;
+    margin-inline: 1.5rem;
+}
+
+.flex {
+    display: flex;
+}
+
+/* CARD */
+.order__container {
+    position: relative;
+    background-color: #fff;
+    border-radius: 1.25rem;
+    overflow: hidden;
+    padding-top: 12.25rem;
+    padding-inline: 1.5rem;
+    box-shadow: 0px 24px 24px 4px hsla(223, 23%, 55%, .1);
+}
+
+.order__img {
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+.order__title {
+    font-size: var(--biggest-font-size);
+    font-weight: var(--font-black);
+    color: var(--dark-blue);
+    text-align: center;
+    margin-bottom: 1.875rem;
+}
+
+.order__description {
+    font-size: var(--normal-font-size);
+    color: var(--des-blue);
+    text-align: center;
+    padding-inline: .5rem;
+    margin-bottom: 1.875rem;
+    line-height: 1.75;
+}
+
+.order__data {
+    background-color: var(--pale-blue);
+    padding: 1rem;
+    border-radius: .875rem;
+    align-items: center;
+    margin-bottom: 1.5rem;
+    justify-content: space-between;
+}
+
+.order__left-details {
+    display: inline-flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.order__details span {
+    display: block;
+}
+
+.order__plan {
+    font-weight: var(--font-bold);
+    font-size: var(--smaller-font-size);
+    color: var(--dark-blue);
+}
+
+.order__pricing {
+    font-size: var(--smaller-font-size);
+    letter-spacing: 2;
+    color: var(--des-blue);
+}
+
+.order__change {
+    font-size: var(--smaller-font-size);
+    font-weight: var(--font-bold);
+    color: var(--primary-color-alt);
+    text-decoration: underline;
+}
+
+.order__change:hover {
+    text-decoration: none;
+    color: var(--medium-blue);
+}
+
+.order__change:active {
+    text-decoration: none;
+    color: var(--medium-blue);
+}
+
+.order__button {
+    display: block;
+    cursor: pointer;
+    background-color: var(--primary-color-alt);
+    width: 100%;
+    padding: 1rem 3rem;
+    margin-bottom: 1.5rem;
+    text-align: center;
+    font-family: var(--body-font);
+    font-size: var(--small-font-size);
+    font-weight: var(--font-bold);
+    border-radius: .875rem;
+    /* offset-x | offset-y | blur-radius | spread-radius | color */
+    box-shadow: 0px 14px 24px 4px hsla(245, 75%, 52%, .2);
+    transition: background .3s;
+}
+
+.order__button:visited {
+    color: white;
+}
+
+.order__button:hover {
+    background-color: var(--medium-blue);
+}
+
+.order__button:active {
+    background-color: var(--medium-blue);
+}
+
+.order__cancel {
+    display: block;
+    text-align: center;
+    font-weight: var(--font-bold);
+    color: var(--des-blue);
+    margin-bottom: 1.5rem;
+}
+
+.order__cancel:hover{
+    color: var(--dark-blue);
+}
+
+.order__cancel:active{
+    color: var(--dark-blue);
+}
+
+/* BREAKPOINT */
+
+/* Small screens */
+@media screen and (max-width: 360px) {
+    .section {
+        padding-block: 2.5rem;
+    }
+
+    .container {
+        margin-inline: 1rem;
+    }
+
+    .order__container {
+        padding-top: 25vh;
+        padding-inline: 3vh;
+    }
+
+    .order__title {
+        margin-bottom: 1rem;
+    }
+
+    .order__description {
+        line-height: normal;
+    }
+
+    .order__data {
+        flex-direction: column;
+        row-gap: 1vh;
+    }
+
+    .order__details {
+        padding-inline: 0;
+        align-self:unset;
+    }
+
+    .order__button {
+        padding: 1rem;
+    }
+}
+@media screen and (min-width: 376px) {
+    .order__container {
+        padding-top: 13.25rem;
+    }
+}
+
+/* Medium screens */
+@media screen and (min-width: 498px) {
+    .container {
+        margin-inline: auto;
+    }
+
+    .order__container {
+        padding: 16rem 3rem 0.875rem;
+    }
+
+    .order__title {
+        margin-bottom: 2rem;
+    }
+
+    .order__description {
+        margin-bottom: 1.5rem;
+    }
+
+    .order__data {
+        padding: 1.5rem;
+    }
+}
+
+/* Large screens */
+@media screen and (min-width: 1024px) {
+    body {
+        background: url('/assets/img/pattern-background-desktop.svg');
+        background-color: var(--primary-color);
+        background-position: top;
+        background-repeat: repeat-x;
+        font-family: var(--body-font);
+        font-size: var(--normal-font-size);
+    }
+
+    .section {
+        padding-block: 6.25rem;
+    }
+}
