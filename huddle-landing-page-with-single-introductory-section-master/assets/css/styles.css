@@ -36,7 +36,7 @@
 
 body {
     background-color: var(--primary-color);
-    background-image: url('./assets/img/bg-mobile.svg');
+    background-image: url('../assets/img/bg-mobile.svg');
     background-repeat: no-repeat;
     background-size: contain;
     font-family: var(--body-font);
@@ -156,7 +156,7 @@ a {
 /* BREAKPOINTS */
 @media screen and (min-width: 1024px) {
     body {
-        background-image: url('./assets/img/bg-desktop.svg');
+        background-image: url('../assets/img/bg-desktop.svg');
         background-size: cover;
         height: 100vh;
     }
