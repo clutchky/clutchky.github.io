@@ -1,0 +1,249 @@
+/* GOOGLE FONTS */
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans&family=Poppins:wght@400;600&display=swap');
+
+/* CSS VARIABLES */
+:root {
+
+    /* Colors */
+    --primary-color: hsl(257, 40%, 49%);
+    --secondary-color: hsl(300, 69%, 71%);
+    --white: hsl(0, 0%, 100%);
+
+    /* Fonts and typography */
+    --title-font: 'Poppins', sans-serif;
+    --body-font: 'Open Sans', sans-serif;
+    --big-font-size: 1.5rem;
+    --normal-font-size: 1rem;
+
+    /* Font weights */
+    --font-normal: 400;
+    --font-semibold: 600;
+
+}
+
+@media screen and (min-width: 1024px){
+    :root {
+        --big-font-size: 2.5rem;
+    }
+}
+
+/* BASE STYLES */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    background-color: var(--primary-color);
+    background-image: url('/assets/img/bg-mobile.svg');
+    background-repeat: no-repeat;
+    background-size: contain;
+    font-family: var(--body-font);
+    color: var(--white);
+}
+
+h1 {
+    font-family: var(--title-font);
+    font-weight: var(--font-semibold);
+}
+
+img {
+    max-width: 100%;
+    height: auto;
+}
+
+ul, li {
+    list-style-type: none;
+}
+
+a {
+    text-decoration: none;
+    font-family: var(--title-font);
+    color: var(--white);
+}
+
+/* REUSABLE CSS */
+.container {
+    margin-inline: 2.25rem;
+}
+
+.grid {
+    display: grid;
+    gap: 1rem;
+}
+
+.flex {
+    display: flex;
+}
+
+/* HEADER */
+.header__container {
+    padding-top: 2rem;
+}
+
+.header__image {
+    width: 40%;
+}
+
+/* HERO */
+.hero__container {
+    padding-top: 3.5rem;
+}
+
+.hero__data {
+    flex-direction: column;
+    padding-top: 2.5rem;
+}
+
+.hero__title {
+    font-size: var(--big-font-size);
+    text-align: center;
+    margin-bottom: 1.5rem;
+}
+
+.hero__description {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.hero__button {
+    width: 65%;
+    background-color: var(--white);
+    text-align: center;
+    color: var(--primary-color);
+    font-size: .875rem;
+    padding-block: .75rem;
+    border-radius: 2rem;
+    align-self: center;
+    box-shadow: 0px 4px 10px hsl(257, 40%, 39%);
+    transition: background .3s;
+}
+
+.hero__button:hover {
+    cursor: pointer;
+    background-color: var(--secondary-color);
+    color: var(--white);
+}
+
+/* SOCIAL MEDIA */
+.social__media-container {
+    padding-top: 4rem;
+    margin-inline: auto;
+    margin-bottom: 2.5rem;
+}
+
+.social__media-list {
+    justify-content: center;
+    gap: 1rem;
+}
+
+.social__media-item {
+    cursor: pointer;
+    display: block;
+    border-radius: 100%;
+    border: 1px solid var(--white);
+    padding: .5rem .75rem;
+    line-height: 1.5;
+    transition: color .3s, border-color .3s;
+}
+
+.social__media-item:hover {
+    border-color: var(--secondary-color);
+    color: var(--secondary-color);
+}
+
+/* BREAKPOINTS */
+@media screen and (min-width: 1024px) {
+    body {
+        background-image: url('/assets/img/bg-desktop.svg');
+        background-size: cover;
+        height: 100vh;
+    }
+
+    .hero__container {
+        grid-template-columns: 1fr 1fr;
+        column-gap: 3.5rem;
+    }
+
+    .container {
+        margin-inline: 4rem;
+    }
+
+    .header__container {
+        padding-top: 4rem;
+    }
+
+    .header__image {
+        width: 200px;
+    }
+
+    .hero__container {
+        padding-top: 4rem;
+    }
+
+    .hero__data {
+        padding-top: 0;
+    }
+
+    .hero__title {
+        text-align: left;
+    }
+
+    .hero__description {
+        text-align: left;
+    }
+
+    .hero__button {
+        align-self: start;
+    }
+
+    .social__media-list {
+        justify-content: end;
+    }
+}
+
+@media screen and (min-width: 1440px) {
+    body {
+        background-size: inherit;
+    }
+
+    .container {
+        width: 1280px;
+        margin-inline: auto;
+    }
+
+    .hero__container {
+        grid-template-columns: 700px 1fr;
+        column-gap: 3.5rem;
+    }
+
+    .hero__data {
+        padding-top: 2.5rem;
+    }
+
+    .hero__title,
+    .hero__description {
+        text-align: left;
+    }
+
+    .hero__description {
+        width: 87%;
+        line-height: 1.5rem;
+    }
+
+    .hero__button {
+        width: 35%;
+        align-self: start;
+    }
+
+    .social__media-container {
+        padding-top: 2rem;
+    }
+}
+
+@media screen and (min-width: 1441px) {
+    body {
+        background-size: contain;
+    }
+}
