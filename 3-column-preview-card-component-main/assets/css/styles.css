@@ -1,0 +1,185 @@
+/* GOOGLE FONTS */
+@import url('https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@700&family=Lexend+Deca&display=swap');
+
+/* CSS VARIABLES */
+:root {
+
+    /* Colors */
+    --primary-color: hsl(31, 77%, 52%);
+    --secondary-color: hsl(184, 100%, 22%);
+    --tertiary-color: hsl(179, 100%, 13%);
+    --text-color: hsla(0, 0%, 100%, 0.75);
+    --accent-color: hsl(0, 0%, 95%);
+
+    /* Fonts and typography */
+    --body-font: 'Lexend Deca', sans-serif;
+    --title-font: 'Big Shoulders Display', cursive;
+    --biggest-font: 2.5rem;
+    --normal-font-size: 1rem;
+
+    /* Font weights */
+    --font-normal: 400;
+    --font-bold: 700;
+}
+
+@media screen and (min-width: 767px) {
+    :root {
+        --normal-font-size: .9375rem;
+    }
+}
+
+/* BASE STYLES */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    background-color: var(--accent-color);
+    font-family: var(--body-font);
+    font-size: var(--normal-font-size);
+    color: var(--text-color);
+}
+
+img {
+    max-width: 100%;
+    height: auto;
+}
+
+h1 {
+    font-family: var(--title-font);
+    font-size: var(--biggest-font);
+}
+
+button {
+    font-family: var(--body-font);
+    font-size: var(--normal-font-size);
+}
+
+/* REUSABLE CSS */
+.container {
+    margin-inline: 1.5rem;
+}
+
+.grid {
+    display: grid;
+}
+
+.section {
+    padding-block: 5.5rem 2rem;
+}
+
+/* CARD */
+.card__container {
+    border-radius: .5rem;
+    overflow: hidden;
+    margin-bottom: 1rem;
+}
+
+.card__item {
+    padding-block: 3rem;
+    padding-inline: 2rem 1.5rem;
+}
+
+.card__item:nth-child(1) {
+    background-color: var(--primary-color);
+}
+.card__item:nth-child(2) {
+    background-color: var(--secondary-color);
+}
+.card__item:nth-child(3) {
+    background-color: var(--tertiary-color);
+}
+
+.card__icon,
+.card__title {
+    margin-bottom: 2rem;
+}
+
+.card__title {
+    color: var(--accent-color);
+    text-transform: uppercase;
+}
+
+.card__description {
+    margin-bottom: 1.875rem;
+    line-height: 1.5;
+}
+
+.card__button {
+    cursor: pointer;
+    width: 65%;
+    padding: 1.125rem;
+    border-radius: 2rem;
+    border: 0;
+    outline-color: transparent;
+    transition: background .3s;
+}
+
+.card__button:hover {
+    background-color: transparent;
+}
+
+.card__item:nth-child(1) .card__button{
+    color: var(--primary-color);
+}
+
+.card__item:nth-child(2) .card__button{
+    color: var(--secondary-color);
+}
+
+.card__item:nth-child(3) .card__button{
+    color: var(--tertiary-color);
+}
+
+.card__item:nth-child(1) .card__button:hover,
+.card__item:nth-child(2) .card__button:hover,
+.card__item:nth-child(3) .card__button:hover {
+    border: 1px solid var(--accent-color);
+    color: var(--accent-color);
+}
+
+/* BREAKPOINTS */
+@media screen and (min-width: 767px) {
+    .card__button {
+        display: block;
+        margin-inline: auto;
+        width: 50%;
+    }
+
+}
+
+@media screen and (min-width: 1024px) {
+    .section {
+        padding-top: 10.5rem;
+    }
+
+    .container {
+        max-width: 920px;
+        margin-inline: auto;
+    }
+
+    .card__container {
+        grid-template-columns: 1fr 1fr 1fr;
+    }
+
+    .card__item {
+        padding: 3rem;
+    }
+
+    .card__icon,
+    .card__title {
+        margin-bottom: 2.5rem;
+    }
+
+    .card__description {
+        margin-bottom: 5.5rem;
+    }
+
+    .card__button {
+        display: inline;
+        width: 75%;
+    }
+
+}
