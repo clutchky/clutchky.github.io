@@ -1,4 +1,4 @@
 # clutchky.github.io
-Jamaihl Amoroso's Portfolio
+clutchky's Portfolio
 
 Portfolio (Under Construction)
