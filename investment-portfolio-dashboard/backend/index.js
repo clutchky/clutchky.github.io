@@ -36,6 +36,7 @@ let stocks = [
     }
 ]
 
+
 app.get('/', (request, response) => {
     response.send("<h1>Investment Portfolio Dashboard</h1>");
 })
@@ -83,7 +84,9 @@ app.delete('/api/stocks/:id', (request, response) => {
     response.status(204).end();
 })
 
-const PORT = 3001
-app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
-})
+// const PORT = 3001
+// app.listen(PORT, () => {
+//     console.log(`Server running on port ${PORT}`);
+// })
+
+const PORT = process.env.PORT || 3001;
