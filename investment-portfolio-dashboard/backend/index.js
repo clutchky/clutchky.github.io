@@ -1,6 +1,7 @@
 const express = require("express");
 const cors = require('cors');
 const app = express();
+const { v4 } = require('uuid');
 
 app.use(express.json());
 app.use(cors());
@@ -35,7 +36,6 @@ let stocks = [
         price: 5.00
     }
 ]
-
 
 app.get('/', (request, response) => {
     response.send("<h1>Investment Portfolio Dashboard</h1>");
@@ -84,9 +84,7 @@ app.delete('/api/stocks/:id', (request, response) => {
     response.status(204).end();
 })
 
-// const PORT = 3001
-// app.listen(PORT, () => {
-//     console.log(`Server running on port ${PORT}`);
-// })
-
-const PORT = process.env.PORT || 3001;
+const PORT = 3001
+app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
+})
