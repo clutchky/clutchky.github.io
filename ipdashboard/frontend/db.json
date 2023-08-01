@@ -1,0 +1,27 @@
+{
+  "stocks": [
+    {
+      "id": 0,
+      "tickerSymbol": "$SCC",
+      "price": "33.05"
+    },
+    {
+      "tickerSymbol": "test",
+      "price": "41412",
+      "date": 1690747141022,
+      "id": 1
+    },
+    {
+      "tickerSymbol": "$JFC",
+      "price": "421",
+      "date": "2023-07-30T19:59:29.709Z",
+      "id": 2
+    },
+    {
+      "tickerSymbol": "test",
+      "price": 0,
+      "date": "2023-08-01T14:42:53.027Z",
+      "id": 3
+    }
+  ]
+}
