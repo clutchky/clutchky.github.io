@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
-import axios from "axios"
+import stocksService from "./services/stocks";
+
 
 const AddStockForm = (props) => {
 
@@ -32,11 +33,11 @@ const App = () => {
   });
 
   useEffect(() => {
-    axios.get('http://localhost:3001/stocks')
-    .then(response => {
-      const stocks = response.data;
-      setStockList(stocks);
-    })
+    stocksService.getAll()
+      .then(response => {
+        const stocks = response.data;
+        setStockList(stocks);
+      })
   }, [])
 
   const addNewStock = (event) => {
@@ -48,8 +49,7 @@ const App = () => {
       date: new Date()
     }
 
-    axios
-      .post('http://localhost:3001/stocks', stockObject)
+    stocksService.create(stockObject)
       .then(response => {
         setStockList(stockList.concat(response.data));
         setNewStock({});
