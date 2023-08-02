@@ -9,9 +9,14 @@ const create = newObject => {
     return axios.post(baseUrl, newObject);
 }
 
-const stocksService = {
-    getAll: getAll,
-    create: create
+const updateOne = (id, newObject) => {
+    return axios.put(`${baseUrl}/${id}`, newObject);
 }
+
+const removeOne = (id) => {
+    return axios.delete(`${baseUrl}/${id}`);
+}
+
+const stocksService = { getAll, create, updateOne, removeOne }
 
 export default stocksService;
