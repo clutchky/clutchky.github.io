@@ -1,0 +1,49 @@
+/* GOOGLE FONTS */
+/* CSS Variables */
+:root {
+	/* Colors */
+	/* Fonts and typography */
+	/* Font weights */
+	/* z-index */
+}
+/* Breakpoint for font size */
+/* Dark Theme (if any) variables */
+/* Base styles */
+* {
+	box-sizing: border-box;
+	margin: 0;
+	padding: 0;
+}
+
+h1, h2 {
+    color: green;
+    font-style: italic;
+}
+
+/* Reusable CSS Classes */
+.stock {
+    color: grey;
+    padding-top: .3125rem;
+    font-size: .9375rem;    
+}
+
+.error {
+    color: red;
+    background: grey;
+    font-size: 1.25rem;
+    border-style: solid;
+    border-radius: 0.3125rem;
+    padding: .625rem;
+    margin-bottom: .625rem;
+}
+
+.success {
+    color: green;
+    background: grey;
+    font-size: 1.25rem;
+    border-style: solid;
+    border-radius: 0.3125rem;
+    padding: .625rem;
+    margin-bottom: .625rem;
+}
+/* Breakpoints */

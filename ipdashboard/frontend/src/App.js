@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import stocksService from "./services/stocks";
 import AddStockForm from "./components/AddStockForm";
+import './styles.css'
+import Notification from "./components/Notification";
 
 const App = () => {
 
@@ -10,6 +12,10 @@ const App = () => {
     price: ""
   });
   const [searchedStock, setSearchedStock] = useState("");
+  const [message, setMessage] = useState({
+    notification: "",
+    status: ""
+  });
 
   useEffect(() => {
     stocksService.getAll()
@@ -40,6 +46,16 @@ const App = () => {
         .then(response => {
           setStockList(stockList.map(s => s.id !== matchedStock.id ? s : response.data));
           setNewStock({ tickerSymbol: "", price: "" });
+          setMessage({
+            notification: `${stockObject.tickerSymbol} was updated`,
+            status: "success"
+          });
+          setTimeout(() => {
+            setMessage({
+              notification: "",
+              status: ""
+            })
+          }, 5000);
         })
       } else {
         setNewStock({
@@ -52,9 +68,18 @@ const App = () => {
       .then(response => {
         setStockList(stockList.concat(response.data));
         setNewStock({ tickerSymbol: "", price: "" });
+        setMessage({
+          notification: `${stockObject.tickerSymbol} was added`,
+          status: "success"
+        });
+        setTimeout(() => {
+          setMessage({
+            notification: "",
+            status: ""
+          })
+        }, 5000);
       })
     }
-
   }
 
   const removeStock = (id) => {
@@ -68,7 +93,17 @@ const App = () => {
           setNewStock({
             tickerSymbol: "",
             price: ""
-          })
+          });
+          setMessage({
+            notification: `${stock.tickerSymbol} was removed`,
+            status: "success"
+          });
+          setTimeout(() => {
+            setMessage({
+              notification: "",
+              status: ""
+            })
+          }, 5000);
         })
     }
   }
@@ -90,6 +125,7 @@ const App = () => {
   return (
     <div>
       <h2>Investment Portfolio Dashboard</h2>
+      <Notification message={message} status={message.status}/>
       <div>
         <span>Search stock: </span>
         <input onChange={handleSearch}/>
@@ -103,7 +139,7 @@ const App = () => {
       
       <ul>
         {filteredStock.map((s, index) =>
-            <li key={index}>{s.tickerSymbol}: 
+            <li className='stock' key={index}>{s.tickerSymbol}: 
             {s.price} <button onClick={() => removeStock(s.id)} >delete</button>
             </li>
           )
