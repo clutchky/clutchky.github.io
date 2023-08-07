@@ -3,10 +3,11 @@ import stocksService from "./services/stocks";
 import AddStockForm from "./components/AddStockForm";
 import './styles.css'
 import Notification from "./components/Notification";
+import Footer from "./components/Footer";
 
 const App = () => {
 
-  const [stockList, setStockList] = useState([]);
+  const [stockList, setStockList] = useState(null);
   const [newStock, setNewStock] = useState({
     tickerSymbol: "",
     price: ""
@@ -24,6 +25,11 @@ const App = () => {
         setStockList(stocks);
       })
   }, [])
+
+  // do not render anything if stock list is still null
+  if (!stockList) {
+    return null
+  }
 
   //filter searched stock
   const filteredStock = stockList.filter(s => s.tickerSymbol.toLowerCase().includes(searchedStock.toLowerCase()));
@@ -47,7 +53,7 @@ const App = () => {
           setStockList(stockList.map(s => s.id !== matchedStock.id ? s : response.data));
           setNewStock({ tickerSymbol: "", price: "" });
           setMessage({
-            notification: `${stockObject.tickerSymbol} was updated`,
+            notification: `${stockObject.tickerSymbol}'s price was updated`,
             status: "success"
           });
           setTimeout(() => {
@@ -57,7 +63,24 @@ const App = () => {
             })
           }, 5000);
         })
-      } else {
+        .catch(error => {
+          setMessage({
+            notification: `${stockObject.tickerSymbol} was already removed from server`,
+            status: "error"
+          });
+          setTimeout(() => {
+            setMessage({
+              notification: "",
+              status: ""
+            })
+          }, 5000);
+          setStockList(stockList.filter(s => s.id !== matchedStock.id));
+          setNewStock({
+            tickerSymbol: "",
+            price: ""
+          })
+        })
+      } else { // if stock price is retained, clear the form
         setNewStock({
           tickerSymbol: "",
           price: ""
@@ -105,6 +128,19 @@ const App = () => {
             })
           }, 5000);
         })
+        .catch(error => { 
+          setMessage({
+            notification: `${stock.tickerSymbol} was already removed`,
+            status: "error"
+          });
+          setTimeout(() => {
+            setMessage({
+              notification: "",
+              status: ""
+            })
+          }, 5000);
+          setStockList(stockList.filter(s => s.id !== stock.id))
+        })
     }
   }
 
@@ -145,6 +181,7 @@ const App = () => {
           )
         }
       </ul>
+      <Footer />
     </div>
   );
 }

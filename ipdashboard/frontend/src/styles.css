@@ -22,14 +22,12 @@ h1, h2 {
 
 /* Reusable CSS Classes */
 .stock {
-    color: grey;
     padding-top: .3125rem;
     font-size: .9375rem;    
 }
 
 .error {
     color: red;
-    background: grey;
     font-size: 1.25rem;
     border-style: solid;
     border-radius: 0.3125rem;
@@ -39,7 +37,6 @@ h1, h2 {
 
 .success {
     color: green;
-    background: grey;
     font-size: 1.25rem;
     border-style: solid;
     border-radius: 0.3125rem;
