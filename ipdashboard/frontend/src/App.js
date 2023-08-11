@@ -24,7 +24,7 @@ const App = () => {
         const stocks = response.data;
         setStockList(stocks);
       })
-  }, [])
+  }, []);
 
   // do not render anything if stock list is still null
   if (!stockList) {
