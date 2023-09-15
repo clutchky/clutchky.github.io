@@ -1,9 +1,8 @@
+require('dotenv').config();
 const express = require('express');
 const morgan = require('morgan');
 const cors = require('cors');
-const dotenv = require('dotenv');
-
-dotenv.config();
+const Stock = require('./models/stock');
 
 const app = express();
 app.use(express.static('build'));
@@ -15,12 +14,6 @@ const requestLogger = (request, response, next) => {
     console.log('---');
     next();
 };
-
-const unknownEndpoint = (request, response) => {
-    response.status(404).send({
-        error: 'unknown endpoint'
-    });
-}
 
 app.use(express.json());
 app.use(cors());
@@ -40,65 +33,60 @@ app.use(morgan((tokens, req, res) => {
         tokens.body(req, res)
     ].join(' ');
 }));
+
 app.use(requestLogger);
 
-let stocks = [
-    {
-        id: 1,
-        tickerSymbol: '$SCC',
-        price: 33.00
-    },
-    {
-        id: 2,
-        tickerSymbol: '$JFC',
-        price: 157.00
-    },
-    {
-        id: 3,
-        tickerSymbol: '$GLO',
-        price: 2401.00
-    },
-    {
-        id: 4,
-        tickerSymbol: '$TEST',
-        price: 401.00
-    }
-];
-
-app.get('/', (request, response) => {
+app.get('/', (request, response) => { // overwritten by 'build' folder
     response.send('<h1>Investment Portfolio Dashboard</h1>');
 });
 
 app.get('/info', (request, response) => {
     const requestTime = new Date();
-    response.send(
-        `<p>Stocks analyzed: ${stocks.length}</p>
-        <p>${requestTime}</p>
-        `
-    );
+
+    Stock.find({})
+        .then(stocks => {
+            response.send(
+                `<p>Stocks analyzed: ${stocks.length}</p>
+                <p>${requestTime}</p>
+                `
+            )
+        })
 });
 
 app.get('/api/stocks', (request, response) => {
-    response.json(stocks);
-});
+    Stock.find({}).then(stocks => {
+        response.json(stocks);
+    })
+})
 
 // fetches a single stockquote
-app.get('/api/stocks/:id', (request, response) => {
-    const id = Number(request.params.id);
-    const stock = stocks.find(stock => stock.id === id)
-    
-    if (stock) {
-        response.json(stock);
-    } else {
-        response.status(404).send('Stock not found').end();
-    }
+app.get('/api/stocks/:id', (request, response, next) => {
+    Stock.findById(request.params.id)
+        .then(stock => {
+            if (stock) {
+                response.json(stock);
+            } else {
+                response.status(404).end();
+            }
+        })
+        .catch(error => {
+            next(error);
+        });
 });
 
 // delete a single stockquote
-app.delete('/api/stocks/:id', (request, response) => {
-    const id = Number(request.params.id);
-    stocks = stocks.filter(stock => stock.id !== id);
-    response.status(204).end();
+app.delete('/api/stocks/:id', (request, response, next) => {
+    Stock.findByIdAndRemove(request.params.id)
+        .then(result => {
+            if (!result) {
+                response.status(400).send({
+                    error: 'stock does not exist'
+                })
+            } else {
+                response.status(204).end();
+            }
+        })
+        .catch(error => next(error));
 });
 
 // temporary id generator
@@ -108,6 +96,22 @@ const generateId = () => { // subject to change
         : 0;
     return maxId + 1;
 }
+
+// update a stockquote
+app.put('/api/stocks/:id', (request, response, next) => {
+    const body = request.body;
+
+    const stock = {
+        tickerSymbol: body.tickerSymbol,
+        price: body.price
+    }
+
+    Stock.findByIdAndUpdate(request.params.id, stock, { new: true })
+        .then(updatedStock => {
+            response.json(updatedStock);
+        })
+        .catch(error => next(error));
+})
 
 // add a stockquote
 app.post('/api/stocks', (request, response) => {
@@ -119,27 +123,47 @@ app.post('/api/stocks', (request, response) => {
         })
     }
 
-    const stockTickers = stocks.map(s => s.tickerSymbol);
-
-    // check if stock is already added
-    if (stockTickers.includes(body.tickerSymbol)) {
-        return response.status(400).json({
-            error: 'stock already exists'
-        })
-    }
-
-    const stock = {
+    const stock = new Stock({
         tickerSymbol: body.tickerSymbol,
         price: body.price || 0, // default price is set to 0
-        id: generateId(),
-    }
+    });
 
-    stocks = stocks.concat(stock); // add stock to stock list
+    stock.save()
+        .then(addedStock => {
+            response.json(addedStock);
+        })
 
-    response.json(stock);
+    // const stockTickers = stocks.map(s => s.tickerSymbol);
+
+    // check if stock is already added
+    // if (stockTickers.includes(body.tickerSymbol)) {
+    //     return response.status(400).json({
+    //         error: 'stock already exists'
+    //     })
+    // }
+
 });
 
+const unknownEndpoint = (request, response) => {
+    response.status(404).send({
+        error: 'unknown endpoint'
+    });
+}
+
+const errorHandler = (error, request, response, next) => {
+    console.error(error.message);
+
+    if(error.name === 'CastError') {
+        return response.status(400).send({
+            error: 'malformatted id'
+        });
+    }
+
+    next(error);
+}
+
 app.use(unknownEndpoint);
+app.use(errorHandler);
 
 const PORT = process.env.PORT || 3001;
 
