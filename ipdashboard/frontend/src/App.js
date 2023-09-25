@@ -102,6 +102,18 @@ const App = () => {
           })
         }, 5000);
       })
+      .catch(error => {
+        setMessage({
+          notification: `${error.response.data.error}`,
+          status: "error"
+        });
+        setTimeout(() => {
+          setMessage({
+            notification: "",
+            status: ""
+          })
+        }, 5000);
+      })
     }
   }
 

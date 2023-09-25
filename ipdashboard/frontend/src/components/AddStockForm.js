@@ -8,11 +8,11 @@ const AddStockForm = (props) => {
         <form onSubmit={addNewStock}>
             <div>
             <label>Stock name: $ </label>
-            <input onChange={handleTicker} type="text" name="tickerSymbol" value={newStock.tickerSymbol} required/>
+            <input onChange={handleTicker} type="text" name="tickerSymbol" value={newStock.tickerSymbol} />
             </div>
             <div>
             <label>Stock price: </label>
-            <input onChange={handlePrice} type="text" name="price" value={newStock.price} required/>
+            <input onChange={handlePrice} type="text" name="price" value={newStock.price} />
             </div>
             <button>Add Stock</button>
         </form>
