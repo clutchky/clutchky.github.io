@@ -1,22 +1,34 @@
 const mongoose = require('mongoose');
 
-mongoose.set('strictQuery', false);
-
-const url = process.env.MONGODB_URI;
-
-console.log('connecting to', url);
-
-mongoose.connect(url)
-    .then(result => {
-        console.log('connected to MongoDB');
-    })
-    .catch(error => {
-        console.log('error connecting to MongoDB:', error.message);
-    });
+const financialDataSchema = new mongoose.Schema({
+    year: {
+        type: String,
+        default: "2023"
+    },
+    salesRevenue: {
+        type: Number,
+        default: 0
+    }
+});
 
 const stockSchema = new mongoose.Schema({
-    tickerSymbol: String,
-    price: Number
+    companyName: {
+        type: String,
+        default: ""
+    },
+    tickerSymbol: {
+        type: String,
+        minLength: 2,
+        required: true
+    },
+    price: {
+        type: Number,
+        default: 0
+    },
+    financialData: {
+        type: [financialDataSchema],
+        required: false
+    }
 });
 
 stockSchema.set('toJSON', {
