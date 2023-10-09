@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 const financialDataSchema = new mongoose.Schema({
     year: {
         type: String,
-        default: "2023"
+        default: '2023'
     },
     salesRevenue: {
         type: Number,
@@ -14,7 +14,7 @@ const financialDataSchema = new mongoose.Schema({
 const stockSchema = new mongoose.Schema({
     companyName: {
         type: String,
-        default: ""
+        default: ''
     },
     tickerSymbol: {
         type: String,
@@ -33,9 +33,9 @@ const stockSchema = new mongoose.Schema({
 
 stockSchema.set('toJSON', {
     transform: (document, returnedObject) => {
-        returnedObject.id = returnedObject._id.toString() // stringifies id object
-        delete returnedObject._id
-        delete returnedObject.__v
+        returnedObject.id = returnedObject._id.toString(); // stringifies id object
+        delete returnedObject._id;
+        delete returnedObject.__v;
     }
 });
 
