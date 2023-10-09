@@ -1,0 +1,88 @@
+const mongoose = require('mongoose');
+const supertest = require('supertest');
+const helper = require('./test_helper');
+const app = require('../app');
+const api = supertest(app);
+const Stock = require('../models/stock');
+
+beforeEach(async () => {
+    await Stock.deleteMany({});
+    let stockObject = new Stock(helper.initialStocks[0]);
+    await stockObject.save();
+    stockObject = new Stock(helper.initialStocks[1]);
+    await stockObject.save();
+});
+
+// supertest format
+test('stocks are returned as json', async () => {
+    await api
+        .get('/api/stocks')
+        .expect(200)
+        .expect('Content-Type', /application\/json/);
+});
+
+//all stocks are returned
+test('all stocks are returned', async () => {
+    const response = await api.get('/api/stocks');
+
+    expect(response.body).toHaveLength(helper.initialStocks.length);
+});
+
+test('a specific stock is within the returned stocks', async () => {
+    const response = await api.get('/api/stocks');
+
+    const tickerSymbols = response.body.map(r => r.tickerSymbol);
+
+    expect(tickerSymbols).toContain('$MER');
+});
+
+// jestjs format
+test('there are two stocks', async () => {
+    const response = await api.get('/api/stocks');
+
+    expect(response.body).toHaveLength(2);
+});
+
+test('the first stock is $SCC', async () => {
+    const response = await api.get('/api/stocks');
+
+    expect(response.body[0].tickerSymbol).toBe('$SCC');
+});
+
+test('a valid stock can be added', async () => {
+    const newStock = {
+        tickerSymbol: '$NEW',
+        price: 1.00
+    };
+
+    await api
+        .post('/api/stocks')
+        .send(newStock)
+        .expect(201)
+        .expect('Content-Type', /application\/json/);
+
+    const stocksAtEnd = await helper.stocksInDb();
+    expect(stocksAtEnd).toHaveLength(helper.initialStocks.length + 1);
+
+    const tickerSymbols = stocksAtEnd.map(r => r.tickerSymbol);
+    expect(tickerSymbols).toContain('$NEW');
+});
+
+test('stock without a stock symbol cannot be added', async () => {
+    const newStock = {
+        price: 0
+    };
+
+    await api
+        .post('/api/stocks')
+        .send(newStock)
+        .expect(400);
+
+    const stocksAtEnd = await helper.stocksInDb();
+
+    expect(stocksAtEnd).toHaveLength(helper.initialStocks.length);
+});
+
+afterAll(async () => {
+    await mongoose.connection.close();
+});
