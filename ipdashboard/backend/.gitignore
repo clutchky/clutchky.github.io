@@ -9,6 +9,8 @@
 # testing
 /coverage
 mongo.js
+/utils/for_testing.js
+/tests/sample_tests
 
 # production
 /build
