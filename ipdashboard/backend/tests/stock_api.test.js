@@ -83,6 +83,39 @@ test('stock without a stock symbol cannot be added', async () => {
     expect(stocksAtEnd).toHaveLength(helper.initialStocks.length);
 });
 
+test('a specific stock can be viewed', async () => {
+    const stocksAtStart = await helper.stocksInDb();
+
+    const stockToView = stocksAtStart[0];
+
+    const resultStock = await api
+        .get(`/api/stocks/${stockToView.id}`)
+        .expect(200)
+        .expect('Content-Type', /application\/json/);
+
+    expect(resultStock.body).toEqual(stockToView);
+});
+
+test('a stock can be deleted', async () => {
+    const stocksAtStart = await helper.stocksInDb();
+
+    const stockToDelete = stocksAtStart[0];
+
+    await api
+        .delete(`/api/stocks/${stockToDelete.id}`)
+        .expect(204);
+
+    const stocksAtEnd = await helper.stocksInDb();
+
+    expect(stocksAtEnd).toHaveLength(
+        helper.initialStocks.length - 1
+    );
+
+    const stocks = stocksAtEnd.map(r => r.tickerSymbol);
+
+    expect(stocks).not.toContain(stockToDelete.tickerSymbol);
+});
+
 afterAll(async () => {
     await mongoose.connection.close();
 });
