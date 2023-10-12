@@ -8,23 +8,19 @@ stocksRouter.get('/', async (request, response) => {
 
 });
 
-stocksRouter.get('/:id', async (request, response, next) => {
+stocksRouter.get('/:id', async (request, response) => {
 
-    try {
-        const stock = await Stock.findById(request.params.id);
+    const stock = await Stock.findById(request.params.id);
 
-        if (stock) {
-            response.json(stock);
-        } else {
-            response.status(404).end();
-        }
-    } catch (exception) {
-        next(exception);
+    if (stock) {
+        response.json(stock);
+    } else {
+        response.status(404).end();
     }
 });
 
 // add a stockquote
-stocksRouter.post('/', async (request, response, next) => {
+stocksRouter.post('/', async (request, response) => {
     const body = request.body;
 
     const stock = new Stock({
@@ -32,38 +28,30 @@ stocksRouter.post('/', async (request, response, next) => {
         price: body.price || 0
     });
 
-    try {
-        const savedStock = await stock.save();
-        response.status(201).json(savedStock);
-    } catch (exception) {
-        next(exception);
-    }
+    const savedStock = await stock.save();
+    response.status(201).json(savedStock);
 
 });
 
 // delete a single stockquote
-stocksRouter.delete('/:id', async (request, response, next) => {
-    try {
-        await Stock.findByIdAndRemove(request.params.id);
-        response.status(204).end();
-    } catch (exception) {
-        next(exception);
-    }
-
+stocksRouter.delete('/:id', async (request, response) => {
+    await Stock.findByIdAndRemove(request.params.id);
+    response.status(204).end();
 });
 
 // update a stockquote
-stocksRouter.put('/:id', (request, response, next) => {
+stocksRouter.put('/:id', async (request, response) => {
+
     const { tickerSymbol, price } = request.body;
 
-    Stock.findByIdAndUpdate(
+    const updatedStock = await Stock.findByIdAndUpdate(
         request.params.id,
         { tickerSymbol, price },
-        { new: true, runValidators: true, context: 'query' })
-        .then(updatedStock => {
-            response.json(updatedStock);
-        })
-        .catch(error => next(error));
+        { new: true, runValidators: true, context: 'query' }
+    );
+
+    response.json(updatedStock);
+
 });
 
 module.exports = stocksRouter;
