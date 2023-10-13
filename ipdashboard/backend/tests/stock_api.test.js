@@ -7,10 +7,7 @@ const Stock = require('../models/stock');
 
 beforeEach(async () => {
     await Stock.deleteMany({});
-    let stockObject = new Stock(helper.initialStocks[0]);
-    await stockObject.save();
-    stockObject = new Stock(helper.initialStocks[1]);
-    await stockObject.save();
+    await Stock.insertMany(helper.initialStocks);
 });
 
 // supertest format
@@ -83,6 +80,23 @@ test('stock without a stock symbol cannot be added', async () => {
     expect(stocksAtEnd).toHaveLength(helper.initialStocks.length);
 });
 
+test('a stock without a price defaults to 0', async () => {
+    const newStock = {
+        tickerSymbol: '$NOPRICE'
+    };
+
+    await api
+        .post('/api/stocks')
+        .send(newStock)
+        .expect(201)
+        .expect('Content-Type', /application\/json/);
+
+    const stocksAtEnd = await helper.stocksInDb();
+
+    expect(stocksAtEnd[2].price).toBe(0);
+
+});
+
 test('a specific stock can be viewed', async () => {
     const stocksAtStart = await helper.stocksInDb();
 
@@ -114,6 +128,13 @@ test('a stock can be deleted', async () => {
     const stocks = stocksAtEnd.map(r => r.tickerSymbol);
 
     expect(stocks).not.toContain(stockToDelete.tickerSymbol);
+});
+
+test('unique identifier of a stock is named id', async () => {
+    const response = await api.get('/api/stocks');
+    const idProperty = Object.keys(response.body[0])[4];
+
+    expect(idProperty).toBeDefined();
 });
 
 afterAll(async () => {
