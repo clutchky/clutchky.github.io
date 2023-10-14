@@ -161,6 +161,27 @@ describe('deleting a stock', () => {
     });
 });
 
+describe('updating a stock', () => {
+    test('succeeds if data is valid', async () => {
+        const stocksAtStart = await helper.stocksInDb();
+
+        const newData = {
+            price: '11.00'
+        };
+
+        const stockToUpdate = stocksAtStart[0];
+
+        await api
+            .put(`/api/stocks/${stockToUpdate.id}`)
+            .send(newData)
+            .expect(200);
+
+        const stocksAtEnd = await helper.stocksInDb();
+
+        expect(stocksAtEnd[0].price).toBe(11);
+    });
+});
+
 afterAll(async () => {
     await mongoose.connection.close();
 });
