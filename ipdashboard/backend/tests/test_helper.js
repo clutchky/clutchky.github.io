@@ -1,4 +1,5 @@
 const Stock = require('../models/stock');
+const User = require('../models/user');
 
 const initialStocks = [
     {
@@ -26,6 +27,11 @@ const stocksInDb = async () => {
     return stocks.map(stock => stock.toJSON());
 };
 
+const usersInDb = async () => {
+    const users = await User.find({});
+    return users.map(users => users.toJSON());
+};
+
 module.exports = {
-    initialStocks, nonExistingId, stocksInDb
+    initialStocks, nonExistingId, stocksInDb, usersInDb
 };
