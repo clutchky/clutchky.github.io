@@ -28,6 +28,10 @@ const stockSchema = new mongoose.Schema({
     financialData: {
         type: [financialDataSchema],
         required: false
+    },
+    user: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
     }
 });
 
