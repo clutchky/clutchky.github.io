@@ -1,5 +1,6 @@
 const stocksRouter = require('express').Router();
 const Stock = require('../models/stock');
+const User = require('../models/user');
 
 stocksRouter.get('/', async (request, response) => {
 
@@ -23,12 +24,18 @@ stocksRouter.get('/:id', async (request, response) => {
 stocksRouter.post('/', async (request, response) => {
     const body = request.body;
 
+    const user = await User.findById(body.userId);
+
     const stock = new Stock({
         tickerSymbol: body.tickerSymbol,
-        price: body.price || 0
+        price: body.price || 0,
+        user: user.id
     });
 
     const savedStock = await stock.save();
+    user.stocks = user.stocks.concat(savedStock._id);
+    await user.save();
+
     response.status(201).json(savedStock);
 
 });
