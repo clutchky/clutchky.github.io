@@ -1,16 +1,5 @@
 const mongoose = require('mongoose');
 
-const financialDataSchema = new mongoose.Schema({
-    year: {
-        type: String,
-        default: '2023'
-    },
-    salesRevenue: {
-        type: Number,
-        default: 0
-    }
-});
-
 const stockSchema = new mongoose.Schema({
     companyName: {
         type: String,
@@ -26,7 +15,11 @@ const stockSchema = new mongoose.Schema({
         default: 0
     },
     financialData: {
-        type: [financialDataSchema],
+        type: Array,
+        default: {
+            year: '2024',
+            salesRevenue: 0
+        },
         required: false
     },
     user: {
