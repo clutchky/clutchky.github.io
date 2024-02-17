@@ -4,7 +4,8 @@ const User = require('../models/user');
 
 stocksRouter.get('/', async (request, response) => {
 
-    const stocks = await Stock.find({});
+    const stocks = await Stock
+        .find({}).populate('user', { username: 1, name: 1 });
     response.json(stocks);
 
 });
