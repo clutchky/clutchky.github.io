@@ -1,6 +1,16 @@
+const jwt = require('jsonwebtoken');
 const stocksRouter = require('express').Router();
 const Stock = require('../models/stock');
 const User = require('../models/user');
+
+const getTokenFrom = request => {
+    const authorization = request.get('authorization');
+    if (authorization && authorization.startsWith('Bearer ')) {
+        return authorization.replace('Bearer ', '');
+    }
+
+    return null;
+};
 
 stocksRouter.get('/', async (request, response) => {
 
@@ -24,8 +34,13 @@ stocksRouter.get('/:id', async (request, response) => {
 // add a stockquote
 stocksRouter.post('/', async (request, response) => {
     const body = request.body;
+    const decodedToken = jwt.verify(getTokenFrom(request), process.env.SECRET);
 
-    const user = await User.findById(body.userId);
+    if (!decodedToken.id) {
+        return response.status(401).json({ error: 'token invalid' });
+    }
+
+    const user = await User.findById(decodedToken.id);
 
     const stock = new Stock({
         tickerSymbol: body.tickerSymbol,
