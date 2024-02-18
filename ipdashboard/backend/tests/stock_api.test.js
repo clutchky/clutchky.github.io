@@ -233,7 +233,49 @@ describe('there is one user in the database and', () => {
             .expect(400)
             .expect('Content-Type', /application\/json/);
 
-        expect(result.body.error).toContain('expected `username` to be unique');
+        expect(result.body.error).toContain('username must be unique');
+
+        const usersAtEnd = await helper.usersInDb();
+        expect(usersAtEnd).toEqual(usersAtStart);
+    });
+
+    test('fails if password length is less than 3', async () => {
+        const usersAtStart = await helper.usersInDb();
+
+        const newUser = {
+            username: 'testuser',
+            name: 'Test user',
+            password: '',
+        };
+
+        const result = await api
+            .post('/api/users')
+            .send(newUser)
+            .expect(400)
+            .expect('Content-Type', /application\/json/);
+
+        expect(result.body.error).toContain('password must be at least 3 characters long');
+
+        const usersAtEnd = await helper.usersInDb();
+        expect(usersAtEnd).toEqual(usersAtStart);
+    });
+
+    test('fails if username and password is not given', async () => {
+        const usersAtStart = await helper.usersInDb();
+
+        const newUser = {
+            username: '',
+            name: 'Test user',
+            password: ''
+        };
+
+        const result = await api
+            .post('/api/users')
+            .send(newUser)
+            .expect(400)
+            .expect('Content-Type', /application\/json/);
+
+        expect(result.body.error).toContain('username and password required');
 
         const usersAtEnd = await helper.usersInDb();
         expect(usersAtEnd).toEqual(usersAtStart);
