@@ -49,8 +49,27 @@ stocksRouter.post('/', async (request, response) => {
 
 // delete a single stockquote
 stocksRouter.delete('/:id', async (request, response) => {
-    await Stock.findByIdAndRemove(request.params.id);
-    response.status(204).end();
+
+    const decodedToken = jwt.verify(request.token, process.env.SECRET);
+
+    if (!decodedToken.id) {
+        return response.status(401).json({
+            error: 'token missing or invalid'
+        });
+    }
+
+    const stockToDelete = await Stock.findById(request.params.id);
+
+    if (decodedToken.id === stockToDelete.user.toString()) {
+        await Stock.findByIdAndRemove(request.params.id);
+
+        response.status(204).end();
+    } else {
+        return response.status(401).json({
+            error: 'cannot delete stocks of other users'
+        });
+    }
+
 });
 
 // update a stockquote
