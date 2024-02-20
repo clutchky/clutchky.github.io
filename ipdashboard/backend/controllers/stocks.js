@@ -1,7 +1,6 @@
-const jwt = require('jsonwebtoken');
 const stocksRouter = require('express').Router();
 const Stock = require('../models/stock');
-const User = require('../models/user');
+const { userExtractor } = require('../utils/middleware');
 
 stocksRouter.get('/', async (request, response) => {
 
@@ -23,15 +22,10 @@ stocksRouter.get('/:id', async (request, response) => {
 });
 
 // add a stockquote
-stocksRouter.post('/', async (request, response) => {
+stocksRouter.post('/', userExtractor, async (request, response) => {
     const body = request.body;
-    const decodedToken = jwt.verify(request.token, process.env.SECRET);
 
-    if (!decodedToken.id) {
-        return response.status(401).json({ error: 'token invalid' });
-    }
-
-    const user = await User.findById(decodedToken.id);
+    const user = request.user;
 
     const stock = new Stock({
         tickerSymbol: body.tickerSymbol,
@@ -48,19 +42,13 @@ stocksRouter.post('/', async (request, response) => {
 });
 
 // delete a single stockquote
-stocksRouter.delete('/:id', async (request, response) => {
+stocksRouter.delete('/:id', userExtractor, async (request, response) => {
 
-    const decodedToken = jwt.verify(request.token, process.env.SECRET);
-
-    if (!decodedToken.id) {
-        return response.status(401).json({
-            error: 'token missing or invalid'
-        });
-    }
+    const user = request.user;
 
     const stockToDelete = await Stock.findById(request.params.id);
 
-    if (decodedToken.id === stockToDelete.user.toString()) {
+    if (user._id.toString() === stockToDelete.user.toString()) {
         await Stock.findByIdAndRemove(request.params.id);
 
         response.status(204).end();
