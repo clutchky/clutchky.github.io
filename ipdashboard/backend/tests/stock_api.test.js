@@ -175,24 +175,40 @@ describe('adding a new stock', () => {
 });
 
 describe('deleting a stock', () => {
-    test('succeeds with status code 204 if id is valid', async () => {
-        const stocksAtStart = await helper.stocksInDb();
+    beforeEach( async () => {
+        // add a test user that creates a stock with token
+        await User.deleteMany({});
 
-        const stockToDelete = stocksAtStart[0];
+        const testUser = await helper.testUser();
+        await testUser.save();
+
+        // add a test stock to delete
+        await Stock.deleteMany({});
+        const testStock = await helper.stockWithToken();
+
+        await testStock.save();
+    });
+
+    test('succeeds with status code 204 if id is valid', async () => {
+        const testStocks = await Stock.find({});
+        const stockToRemove = testStocks[0];
+
+        const token = await helper.testUserToken();
 
         await api
-            .delete(`/api/stocks/${stockToDelete.id}`)
+            .delete(`/api/stocks/${stockToRemove._id.toString()}`)
+            .set('Authorization', `Bearer ${token}`)
             .expect(204);
 
         const stocksAtEnd = await helper.stocksInDb();
 
         expect(stocksAtEnd).toHaveLength(
-            helper.initialStocks.length - 1
+            testStocks.length - 1
         );
 
         const stocks = stocksAtEnd.map(r => r.tickerSymbol);
 
-        expect(stocks).not.toContain(stockToDelete.tickerSymbol);
+        expect(stocks).not.toContain(stockToRemove.tickerSymbol);
     });
 });
 

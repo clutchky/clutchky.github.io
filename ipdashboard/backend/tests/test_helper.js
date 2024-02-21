@@ -63,11 +63,26 @@ const testUserToken = async () => {
 
 };
 
+// test stock with token
+const stockWithToken = async () => {
+
+    const userId = await User.find({});
+
+    const stockToDelete = new Stock({
+        tickerSymbol: '$TST',
+        price: 10.00,
+        user: userId[0]._id
+    });
+
+    return stockToDelete;
+};
+
 module.exports = {
     initialStocks,
     nonExistingId,
     stocksInDb,
     usersInDb,
     testUser,
-    testUserToken
+    testUserToken,
+    stockWithToken
 };
