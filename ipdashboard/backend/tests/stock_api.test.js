@@ -89,7 +89,31 @@ describe('viewing a specific stock', () => {
 });
 
 describe('adding a new stock', () => {
+    beforeEach( async () => {
+        await User.deleteMany({});
+
+        const testUser = await helper.testUser();
+        await testUser.save();
+    });
+
+    test('fails without a token', async () => {
+
+        const newUser = {
+            'username': 'testuser',
+            'password': 'testpasswords'
+        };
+
+        await api
+            .post('/api/login')
+            .send(newUser)
+            .expect(401);
+
+    });
+
     test('succeeds with valid data', async () => {
+
+        const token = await helper.testUserToken();
+
         const newStock = {
             tickerSymbol: '$NEW',
             price: 1.00
@@ -98,6 +122,7 @@ describe('adding a new stock', () => {
         await api
             .post('/api/stocks')
             .send(newStock)
+            .set('Authorization', `Bearer ${token}`)
             .expect(201)
             .expect('Content-Type', /application\/json/);
 
@@ -109,6 +134,9 @@ describe('adding a new stock', () => {
     });
 
     test('without a stock symbol cannot be added', async () => {
+
+        const token = await helper.testUserToken();
+
         const newStock = {
             price: 0
         };
@@ -116,6 +144,7 @@ describe('adding a new stock', () => {
         await api
             .post('/api/stocks')
             .send(newStock)
+            .set('Authorization', `Bearer ${token}`)
             .expect(400);
 
         const stocksAtEnd = await helper.stocksInDb();
@@ -124,6 +153,9 @@ describe('adding a new stock', () => {
     });
 
     test('a stock without a price defaults to 0', async () => {
+
+        const token = await helper.testUserToken();
+
         const newStock = {
             tickerSymbol: '$NOPRICE'
         };
@@ -131,6 +163,7 @@ describe('adding a new stock', () => {
         await api
             .post('/api/stocks')
             .send(newStock)
+            .set('Authorization', `Bearer ${token}`)
             .expect(201)
             .expect('Content-Type', /application\/json/);
 

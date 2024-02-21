@@ -1,3 +1,5 @@
+const jwt = require('jsonwebtoken');
+const bcrypt = require('bcrypt');
 const Stock = require('../models/stock');
 const User = require('../models/user');
 
@@ -32,6 +34,40 @@ const usersInDb = async () => {
     return users.map(users => users.toJSON());
 };
 
+// add a testUser
+const testUser = async () => {
+
+    const passwordHash = await bcrypt.hash('testpassword', 10);
+    const user = new User({
+        username: 'testuser',
+        passwordHash,
+        name: 'Test User'
+    });
+
+    return user;
+};
+
+// get testUser token
+const testUserToken = async () => {
+
+    const user = await User.find({});
+
+    const userToken = {
+        username: user[0].username,
+        id: user[0].id
+    };
+
+    const token = jwt.sign(userToken, process.env.SECRET, { expiresIn: 60*60 });
+
+    return token;
+
+};
+
 module.exports = {
-    initialStocks, nonExistingId, stocksInDb, usersInDb
+    initialStocks,
+    nonExistingId,
+    stocksInDb,
+    usersInDb,
+    testUser,
+    testUserToken
 };
