@@ -7,7 +7,7 @@ const Footer = () => {
     return (
         <div style={footerStyle}>
             <br />
-            <em>Investment Portfolio Dashboard 2023 by Jam Amoroso</em>
+            <em>Investment Portfolio Dashboard 2024 by Jam Amoroso</em>
         </div>
     )
 }

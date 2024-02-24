@@ -4,6 +4,7 @@ import AddStockForm from "./components/AddStockForm";
 import './styles.css'
 import Notification from "./components/Notification";
 import Footer from "./components/Footer";
+import loginService from "./services/login";
 
 const App = () => {
 
@@ -17,6 +18,9 @@ const App = () => {
     notification: "",
     status: ""
   });
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [user, setUser] = useState(null);
 
   useEffect(() => {
     stocksService.getAll()
@@ -170,10 +174,57 @@ const App = () => {
     setNewStock({...newStock, price: event.target.value})
   }
 
-  return (
+  const handleLogin = async (event) => {
+    event.preventDefault()
+    
+    try {
+      const user = await loginService.login({
+        username, password,
+      });
+      setUser(user);
+      setUsername('');
+      setPassword('');
+    } catch (exception) {
+      setMessage({
+        notification: "Wrong credentials",
+        status: "error"
+      });
+      setTimeout(() => {
+        setMessage({
+          notification: "",
+          status: ""
+        })
+      }, 5000);
+    }
+
+  }
+
+  const loginForm = () => (
+      <form onSubmit={handleLogin}>
+        <div>
+          <label>Username:</label>
+          <input 
+            type="text"
+            name="username"
+            value={username}
+            onChange={({ target }) => {setUsername(target.value)}}
+          />
+        </div>
+        <div>
+          <label>Password:</label>
+          <input 
+            type="password"
+            name="password"
+            value={password}
+            onChange={({ target }) => {setPassword(target.value)}}
+          />
+        </div>
+        <button type="submit">Login</button>
+      </form>
+  );
+
+  const stockForm = () => (
     <div>
-      <h2>Investment Portfolio Dashboard</h2>
-      <Notification message={message} status={message.status}/>
       <div>
         <span>Search stock: </span>
         <input onChange={handleSearch}/>
@@ -193,6 +244,22 @@ const App = () => {
           )
         }
       </ul>
+    </div>
+  )
+
+  return (
+    <div>
+      <h2>Investment Portfolio Dashboard</h2>
+      <Notification message={message} status={message.status}/>
+
+      { user === null ?
+         loginForm() :
+         <div>
+          <p>Welcome, <strong>{user.name}</strong></p>
+          { stockForm() }
+         </div>
+      }
+      
       <Footer />
     </div>
   );
