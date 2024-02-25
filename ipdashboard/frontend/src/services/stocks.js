@@ -1,12 +1,23 @@
 import axios from "axios";
 const baseUrl = '/api/stocks';
 
+let token = null;
+
+const setToken = newToken => {
+    token = `Bearer ${newToken}`;
+}
+
 const getAll = () => {
     return axios.get(baseUrl);
 }
 
-const create = newObject => {
-    return axios.post(baseUrl, newObject);
+const create = async newObject => {
+    const config = {
+        headers: { Authorization: token },
+    }
+
+    const response = await axios.post(baseUrl, newObject, config);
+    return response.data;
 }
 
 const updateOne = (id, newObject) => {
@@ -17,6 +28,6 @@ const removeOne = (id) => {
     return axios.delete(`${baseUrl}/${id}`);
 }
 
-const stocksService = { getAll, create, updateOne, removeOne }
+const stocksService = { getAll, create, updateOne, removeOne, setToken }
 
 export default stocksService;

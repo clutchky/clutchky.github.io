@@ -30,6 +30,15 @@ const App = () => {
       })
   }, []);
 
+  useEffect(() => {
+    const loggedInvestorJSON = window.localStorage.getItem('loggedInvestor');
+    if(loggedInvestorJSON) {
+      const user = JSON.parse(loggedInvestorJSON);
+      setUser(user);
+      stocksService.setToken(user.token);
+    }
+  }, []);
+
   // do not render anything if stock list is still null
   if (!stockList) {
     return null
@@ -38,7 +47,7 @@ const App = () => {
   //filter searched stock
   const filteredStock = stockList.filter(s => s.tickerSymbol.toLowerCase().includes(searchedStock.toLowerCase()));
 
-  const addNewStock = (event) => {
+  const addNewStock = async (event) => {
     event.preventDefault();
 
     const stockObject = {
@@ -91,9 +100,9 @@ const App = () => {
         })
       }
     } else {
-      stocksService.create(stockObject)
-      .then(response => {
-        setStockList(stockList.concat(response.data));
+      try {
+        const result = await stocksService.create(stockObject)
+        setStockList(stockList.concat(result));
         setNewStock({ tickerSymbol: "", price: "" });
         setMessage({
           notification: `${stockObject.tickerSymbol} was added`,
@@ -105,8 +114,7 @@ const App = () => {
             status: ""
           })
         }, 5000);
-      })
-      .catch(error => {
+      } catch (error) {
         setMessage({
           notification: `${error.response.data.error}`,
           status: "error"
@@ -117,7 +125,7 @@ const App = () => {
             status: ""
           })
         }, 5000);
-      })
+      }
     }
   }
 
@@ -181,6 +189,11 @@ const App = () => {
       const user = await loginService.login({
         username, password,
       });
+
+      window.localStorage.setItem(
+        'loggedInvestor', JSON.stringify(user)
+      )
+      stocksService.setToken(user.token);
       setUser(user);
       setUsername('');
       setPassword('');
