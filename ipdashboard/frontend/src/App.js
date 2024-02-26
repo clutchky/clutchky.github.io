@@ -61,9 +61,9 @@ const App = () => {
     if(matchedStock) {
 
       if(window.confirm(`${stockObject.tickerSymbol} already exists. Replace the price with a new one?`)) {
-        stocksService.updateOne(matchedStock.id, stockObject)
-        .then(response => {
-          setStockList(stockList.map(s => s.id !== matchedStock.id ? s : response.data));
+        try {
+          const result = await stocksService.updateOne(matchedStock.id, stockObject);
+          setStockList(stockList.map(s => s.id !== matchedStock.id ? s : result.data));
           setNewStock({ tickerSymbol: "", price: "" });
           setMessage({
             notification: `${stockObject.tickerSymbol}'s price was updated`,
@@ -75,8 +75,7 @@ const App = () => {
               status: ""
             })
           }, 5000);
-        })
-        .catch(error => {
+        } catch (error) {
           setMessage({
             notification: `${stockObject.tickerSymbol} was already removed from server`,
             status: "error"
@@ -92,7 +91,7 @@ const App = () => {
             tickerSymbol: "",
             price: ""
           })
-        })
+        }
       } else { // if stock price is retained, clear the form
         setNewStock({
           tickerSymbol: "",
@@ -212,6 +211,12 @@ const App = () => {
 
   }
 
+  const handleLogout = async () => {
+    window.localStorage.clear();
+
+    setUser(null);
+  }
+
   const loginForm = () => (
       <form onSubmit={handleLogin}>
         <div>
@@ -248,15 +253,6 @@ const App = () => {
         handleTicker={handleTicker}
         newStock={newStock}
       />
-      
-      <ul>
-        {filteredStock.map((s, index) =>
-            <li className='stock' key={index}>{s.tickerSymbol}: 
-            {s.price} <button onClick={() => removeStock(s.id)} >delete</button>
-            </li>
-          )
-        }
-      </ul>
     </div>
   )
 
@@ -268,8 +264,16 @@ const App = () => {
       { user === null ?
          loginForm() :
          <div>
-          <p>Welcome, <strong>{user.name}</strong></p>
+          <p>Welcome, <strong>{user.name}</strong>. <button onClick={handleLogout}>Logout</button></p>
           { stockForm() }
+          <ul>
+          {filteredStock.map((s, index) =>
+              <li className='stock' key={index}>{s.tickerSymbol}: 
+              {s.price} <button onClick={() => removeStock(s.id)} >delete</button>
+              </li>
+            )
+          }
+        </ul>
          </div>
       }
       
