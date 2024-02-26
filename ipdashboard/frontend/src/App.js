@@ -5,9 +5,10 @@ import './styles.css'
 import Notification from "./components/Notification";
 import Footer from "./components/Footer";
 import loginService from "./services/login";
+import LoginForm from "./components/LoginForm";
+import Togglable from "./components/Togglable";
 
 const App = () => {
-
   const [stockList, setStockList] = useState(null);
   const [newStock, setNewStock] = useState({
     tickerSymbol: "",
@@ -217,29 +218,22 @@ const App = () => {
     setUser(null);
   }
 
-  const loginForm = () => (
-      <form onSubmit={handleLogin}>
-        <div>
-          <label>Username:</label>
-          <input 
-            type="text"
-            name="username"
-            value={username}
-            onChange={({ target }) => {setUsername(target.value)}}
+  const loginForm = () => {
+   
+    return (
+      <div>
+        <Togglable buttonLabel="Login">
+          <LoginForm
+            username={username}
+            password={password}
+            handleUsernameChange={({ target }) => setUsername(target.value)}
+            handlePasswordChange={({ target }) => setPassword(target.value)}
+            handleSubmit={handleLogin}
           />
-        </div>
-        <div>
-          <label>Password:</label>
-          <input 
-            type="password"
-            name="password"
-            value={password}
-            onChange={({ target }) => {setPassword(target.value)}}
-          />
-        </div>
-        <button type="submit">Login</button>
-      </form>
-  );
+        </Togglable>
+      </div>      
+    );
+  }
 
   const stockForm = () => (
     <div>
@@ -247,12 +241,14 @@ const App = () => {
         <span>Search stock: </span>
         <input onChange={handleSearch}/>
       </div>
-      <AddStockForm 
-        addNewStock={addNewStock}
-        handlePrice={handlePrice}
-        handleTicker={handleTicker}
-        newStock={newStock}
-      />
+      <Togglable buttonLabel="Add a new stock">
+        <AddStockForm 
+          addNewStock={addNewStock}
+          handlePrice={handlePrice}
+          handleTicker={handleTicker}
+          newStock={newStock}
+        />
+      </Togglable>
     </div>
   )
 
@@ -267,13 +263,13 @@ const App = () => {
           <p>Welcome, <strong>{user.name}</strong>. <button onClick={handleLogout}>Logout</button></p>
           { stockForm() }
           <ul>
-          {filteredStock.map((s, index) =>
-              <li className='stock' key={index}>{s.tickerSymbol}: 
-              {s.price} <button onClick={() => removeStock(s.id)} >delete</button>
-              </li>
-            )
-          }
-        </ul>
+            {filteredStock.map((s, index) =>
+                <li className='stock' key={index}>{s.tickerSymbol}: 
+                {s.price} <button onClick={() => removeStock(s.id)} >delete</button>
+                </li>
+              )
+            }
+          </ul>
          </div>
       }
       
