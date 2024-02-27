@@ -10,10 +10,6 @@ import Togglable from "./components/Togglable";
 
 const App = () => {
   const [stockList, setStockList] = useState(null);
-  const [newStock, setNewStock] = useState({
-    tickerSymbol: "",
-    price: ""
-  });
   const [searchedStock, setSearchedStock] = useState("");
   const [message, setMessage] = useState({
     notification: "",
@@ -48,14 +44,7 @@ const App = () => {
   //filter searched stock
   const filteredStock = stockList.filter(s => s.tickerSymbol.toLowerCase().includes(searchedStock.toLowerCase()));
 
-  const addNewStock = async (event) => {
-    event.preventDefault();
-
-    const stockObject = {
-      tickerSymbol: `$${(newStock.tickerSymbol).toUpperCase()}`,
-      price: newStock.price,
-      date: new Date()
-    }
+  const addNewStock = async (stockObject) => {
 
     const matchedStock = filteredStock.find(s => s.tickerSymbol === stockObject.tickerSymbol);
 
@@ -65,7 +54,6 @@ const App = () => {
         try {
           const result = await stocksService.updateOne(matchedStock.id, stockObject);
           setStockList(stockList.map(s => s.id !== matchedStock.id ? s : result.data));
-          setNewStock({ tickerSymbol: "", price: "" });
           setMessage({
             notification: `${stockObject.tickerSymbol}'s price was updated`,
             status: "success"
@@ -88,22 +76,12 @@ const App = () => {
             })
           }, 5000);
           setStockList(stockList.filter(s => s.id !== matchedStock.id));
-          setNewStock({
-            tickerSymbol: "",
-            price: ""
-          })
         }
-      } else { // if stock price is retained, clear the form
-        setNewStock({
-          tickerSymbol: "",
-          price: ""
-        })
       }
     } else {
       try {
         const result = await stocksService.create(stockObject)
         setStockList(stockList.concat(result));
-        setNewStock({ tickerSymbol: "", price: "" });
         setMessage({
           notification: `${stockObject.tickerSymbol} was added`,
           status: "success"
@@ -137,10 +115,6 @@ const App = () => {
       stocksService.removeOne(id)
         .then(response => {
           setStockList(stockList.filter(s => s.id !== stock.id));
-          setNewStock({
-            tickerSymbol: "",
-            price: ""
-          });
           setMessage({
             notification: `${stock.tickerSymbol} was removed`,
             status: "success"
@@ -170,16 +144,6 @@ const App = () => {
 
   const handleSearch = (event) => {
     setSearchedStock(event.target.value);
-  }
-
-  const handleTicker = (event) => {
-    event.preventDefault()
-    setNewStock({...newStock, tickerSymbol: event.target.value});
-  }
-
-  const handlePrice = (event) => {
-    event.preventDefault()
-    setNewStock({...newStock, price: event.target.value})
   }
 
   const handleLogin = async (event) => {
@@ -242,11 +206,7 @@ const App = () => {
         <input onChange={handleSearch}/>
       </div>
       <Togglable buttonLabel="Add a new stock">
-        <AddStockForm 
-          addNewStock={addNewStock}
-          handlePrice={handlePrice}
-          handleTicker={handleTicker}
-          newStock={newStock}
+        <AddStockForm createStock={addNewStock}
         />
       </Togglable>
     </div>
