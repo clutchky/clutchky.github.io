@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import stocksService from "./services/stocks";
 import AddStockForm from "./components/AddStockForm";
 import './styles.css'
@@ -18,6 +18,8 @@ const App = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [user, setUser] = useState(null);
+
+  const stockFormRef = useRef();
 
   useEffect(() => {
     stocksService.getAll()
@@ -80,6 +82,7 @@ const App = () => {
       }
     } else {
       try {
+        stockFormRef.current.toggleVisibility();
         const result = await stocksService.create(stockObject)
         setStockList(stockList.concat(result));
         setMessage({
@@ -205,7 +208,7 @@ const App = () => {
         <span>Search stock: </span>
         <input onChange={handleSearch}/>
       </div>
-      <Togglable buttonLabel="Add a new stock">
+      <Togglable buttonLabel="Add a new stock" ref={stockFormRef}>
         <AddStockForm createStock={addNewStock}
         />
       </Togglable>
