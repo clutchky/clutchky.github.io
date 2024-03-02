@@ -61,17 +61,27 @@ stocksRouter.delete('/:id', userExtractor, async (request, response) => {
 });
 
 // update a stockquote
-stocksRouter.put('/:id', async (request, response) => {
+stocksRouter.put('/:id', userExtractor, async (request, response) => {
+
+    const user = request.user;
+
+    const stockToUpdate = await Stock.findById(request.params.id);
 
     const { tickerSymbol, price } = request.body;
 
-    const updatedStock = await Stock.findByIdAndUpdate(
-        request.params.id,
-        { tickerSymbol, price },
-        { new: true, runValidators: true, context: 'query' }
-    );
+    if (user._id.toString() === stockToUpdate.user.toString()) {
+        const updatedStock = await Stock.findByIdAndUpdate(
+            request.params.id,
+            { tickerSymbol, price },
+            { new: true, runValidators: true, context: 'query' }
+        );
 
-    response.json(updatedStock);
+        response.json(updatedStock);
+    } else {
+        return response.status(401).json({
+            error: 'cannot update stocks of other users'
+        });
+    }
 
 });
 
