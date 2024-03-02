@@ -7,8 +7,8 @@ const setToken = newToken => {
     token = `Bearer ${newToken}`;
 }
 
-const getAll = () => {
-    return axios.get(baseUrl);
+const getAll = async () => {
+    return await axios.get(baseUrl);
 }
 
 const create = async newObject => {
@@ -20,12 +20,22 @@ const create = async newObject => {
     return response.data;
 }
 
-const updateOne = (id, newObject) => {
-    return axios.put(`${baseUrl}/${id}`, newObject);
+const updateOne = async (id, newObject) => {
+
+    const config = {
+        headers: { Authorization: token },
+    }
+
+    return await axios.put(`${baseUrl}/${id}`, newObject, config);
 }
 
-const removeOne = (id) => {
-    return axios.delete(`${baseUrl}/${id}`);
+const removeOne = async (id) => {
+
+    const config = {
+        headers: { Authorization: token },
+    }
+
+    await axios.delete(`${baseUrl}/${id}`, config);
 }
 
 const stocksService = { getAll, create, updateOne, removeOne, setToken }

@@ -20,6 +20,7 @@ const App = () => {
   const [user, setUser] = useState(null);
 
   const stockFormRef = useRef();
+  
 
   useEffect(() => {
     stocksService.getAll()
@@ -68,7 +69,7 @@ const App = () => {
           }, 5000);
         } catch (error) {
           setMessage({
-            notification: `${stockObject.tickerSymbol} was already removed from server`,
+            notification: "Cannot update stock. Log in with the correct user",
             status: "error"
           });
           setTimeout(() => {
@@ -77,7 +78,6 @@ const App = () => {
               status: ""
             })
           }, 5000);
-          setStockList(stockList.filter(s => s.id !== matchedStock.id));
         }
       }
     } else {
@@ -110,26 +110,25 @@ const App = () => {
     }
   }
 
-  const removeStock = (id) => {
+  const removeStock = async (id) => {
     const stock = stockList.find(s => s.id === id);
 
     // using a window.confirm for now
     if (window.confirm(`Delete ${stock.tickerSymbol}?`)) {
-      stocksService.removeOne(id)
-        .then(response => {
-          setStockList(stockList.filter(s => s.id !== stock.id));
+      try{
+        await stocksService.removeOne(id);
+        setStockList(stockList.filter(s => s.id !== stock.id));
+        setMessage({
+          notification: `${stock.tickerSymbol} was removed`,
+          status: "success"
+        });
+        setTimeout(() => {
           setMessage({
-            notification: `${stock.tickerSymbol} was removed`,
-            status: "success"
-          });
-          setTimeout(() => {
-            setMessage({
-              notification: "",
-              status: ""
-            })
-          }, 5000);
-        })
-        .catch(error => { 
+            notification: "",
+            status: ""
+          })
+        }, 5000);
+      } catch (error) {
           setMessage({
             notification: `${stock.tickerSymbol} was already removed`,
             status: "error"
@@ -141,7 +140,7 @@ const App = () => {
             })
           }, 5000);
           setStockList(stockList.filter(s => s.id !== stock.id))
-        })
+      }
     }
   }
 
@@ -159,8 +158,9 @@ const App = () => {
 
       window.localStorage.setItem(
         'loggedInvestor', JSON.stringify(user)
-      )
-      stocksService.setToken(user.token);
+      );
+
+      await stocksService.setToken(user.token);
       setUser(user);
       setUsername('');
       setPassword('');
@@ -215,6 +215,24 @@ const App = () => {
     </div>
   )
 
+  const stockDetails = () => {
+    const owner = user.name;
+
+    return (
+      <ul>
+        {filteredStock.map((s, index) =>
+            <li className='stock' key={index}>{s.tickerSymbol}: 
+            {s.price}
+
+            { owner === s.user.name ? <button onClick={() => removeStock(s.id)} >delete</button> : ''}
+            
+            </li>
+          )
+        }
+      </ul>
+    )
+  }
+
   return (
     <div>
       <h2>Investment Portfolio Dashboard</h2>
@@ -225,14 +243,7 @@ const App = () => {
          <div>
           <p>Welcome, <strong>{user.name}</strong>. <button onClick={handleLogout}>Logout</button></p>
           { stockForm() }
-          <ul>
-            {filteredStock.map((s, index) =>
-                <li className='stock' key={index}>{s.tickerSymbol}: 
-                {s.price} <button onClick={() => removeStock(s.id)} >delete</button>
-                </li>
-              )
-            }
-          </ul>
+          { stockDetails() }
          </div>
       }
       
